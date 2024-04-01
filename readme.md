@@ -20,12 +20,20 @@ would like to integrate downloader.py from the rich examples
 
 # *vgmdllib.py*
 new version of vgmdl, with better queue management and possibility to interrupt the downloads queue
+used by run.py and gui.py
+
+# * app.py *
+flask ui
+uses icons from iconify.desing
+https://icon-sets.iconify.design/
 
 # TODO
-# add small text file with original URL
-# download album picture
-<div class="albumImage">
-    <a href="https://vgmsite.com/soundtracks/mass-effect-expanded-soundtrack/coverart.jpg" target="_blank">
-        <img src="https://vgmsite.com/soundtracks/mass-effect-expanded-soundtrack/thumbs/coverart.jpg">
-    </a><br>
-</div>
+- add small text file with original URL
+- download album picture
+    ```html
+    <div class="albumImage">
+        <a href="https://vgmsite.com/soundtracks/mass-effect-expanded-soundtrack/coverart.jpg" target="_blank">
+            <img src="https://vgmsite.com/soundtracks/mass-effect-expanded-soundtrack/thumbs/coverart.jpg">
+        </a><br>
+    </div>
+    ```
