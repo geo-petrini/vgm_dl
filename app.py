@@ -4,38 +4,47 @@
 flask ui for vgmdl
 '''
 
-from flask import Flask, flash, request, redirect, url_for, send_from_directory
+import logging
+from flask import Flask
 from flask import render_template
+from flask_migrate import Migrate
+import models.logmanager as logmanager
+from models.storage import db
 
-app = Flask(__name__)
 
-# socketio = SocketIO(app)
 
-@app.route('/')
-def home():
-    return redirect(url_for('index'))
 
-@app.route('/index')
-def index():
-    content = ''
-    return render_template("index.html", data=content, title='Video Game Music Downloader')
+def create_app():
+    app = Flask(__name__)
+    logmanager.get_configured_logger(name='vgmdl', outpath="log")
+    # app.logger.setLevel(logging.DEBUG)
+    # socketio = SocketIO(app)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage.sqlite'
+    app.config['SECRET_KEY'] = "dfsohjig894590uwfjl290"
+    
+    db.init_app(app)
+    migrate = Migrate(app, db)
 
-@app.route('/processurl', methods=['POST'])
-def processUrl():
-    if 'url' in request:
-        pass
+    from routes.default import bp as bp_routes
+    app.register_blueprint(bp_routes)    
 
-@app.route('/status', methods=['GET'])
-def get_status():
-    pass    
+    from models.worker_manager import bp as bp_worker
+    app.register_blueprint(bp_worker)      
 
-@app.route('/css/<theme>/<path:filename>')  # the "theme" folder does not exist but is there for routing and masking purpose
-def serve_theme_css(theme, filename):
-    if theme == 'bootstrap':
-        return send_from_directory('static/css', f'bootstrap.min.css')
-    else:
-        return send_from_directory('static/css', f'bootstrap-{theme}.min.css')
+    from models.worker_manager import start_worker
+    start_worker(app)
+
+    with app.app_context():
+        db.create_all()
+
+    return app
+
 
 if __name__ == "__main__":
-    app.run("0.0.0.0", debug = True)
+    # Initialize the Flask application context to work with the database
+    # app.app_context().push()
+    # Start the worker in a daemon thread
     # socketio.run(app, debug=True)
+    # app.run("0.0.0.0", debug = True)
+    # create_app().run(host = "0.0.0.0", debug=True, ssl_context='adhoc')
+    create_app().run(host = "0.0.0.0", debug=True)

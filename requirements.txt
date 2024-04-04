@@ -1,1 +1,6 @@
 rich
+flask
+flask-sqlalchemy
+Flask-Migrate
+pyopenssl
+sqlalchemy-utils

@@ -37,3 +37,15 @@ https://icon-sets.iconify.design/
         </a><br>
     </div>
     ```
+- implement a task queue
+  - option 1: use a db with flask-sqlalchemy
+    - define SQLALCHEMY_DATABASE_URI
+    - define models
+    - setup db: 
+      - `flask db init`
+      - `flask db migrate -m "Initial migration"`
+      - `flask db upgrade` (repeat this every time changes are done)
+      - db (sqlite) is in `./instance/storage.sqlite`
+  - option 2: use redis as queue for flask tasks
+    - deploy redis as docker container, standard port 6379
+    - implement queue eg: https://realpython.com/flask-by-example-implementing-a-redis-task-queue/
