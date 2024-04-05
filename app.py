@@ -56,7 +56,9 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage.sqlite'
     app.config['SECRET_KEY'] = "dfsohjig894590uwfjl290"
     app.config['REDIS_URL'] = "redis://rpi:6379/0"
-    app.config['DOWNLOAD_FOLDER'] = r"C:\Users\geope\Localworks\python\vgm_dl\downloads"
+    # app.config['DOWNLOAD_FOLDER'] = r"C:\Users\geope\Localworks\python\vgm_dl\downloads"
+    app.config['DOWNLOAD_FOLDER'] = "downloads"
+    app.config['DOWNLOAD_CHUNK_SIZE'] = 1024*10
 
     redis_manager = RedisManager(app)
     # redis = Redis(host='rpi', port=6379, db=0)
