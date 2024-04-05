@@ -1,6 +1,8 @@
 rich
 flask
-flask-sqlalchemy
-Flask-Migrate
+#flask-sqlalchemy
+#Flask-Migrate
 pyopenssl
-sqlalchemy-utils
+#sqlalchemy-utils
+redis
+# flask-redis

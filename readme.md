@@ -49,3 +49,4 @@ https://icon-sets.iconify.design/
   - option 2: use redis as queue for flask tasks
     - deploy redis as docker container, standard port 6379
     - implement queue eg: https://realpython.com/flask-by-example-implementing-a-redis-task-queue/
+                          https://sqlpad.io/tutorial/flask-by-example-implementing-a-redis-task-queue/

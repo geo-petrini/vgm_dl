@@ -1,7 +1,9 @@
 import logging
-from flask import url_for, redirect, render_template, request, Blueprint, send_from_directory, abort
+from flask import Blueprint, current_app, g, url_for, redirect, render_template, request, send_from_directory, abort
 # from models.storage import queueAlbum
-import models.storage
+# import models.storage
+import json
+
 
 bp = Blueprint('default', __name__)
 
@@ -23,7 +25,11 @@ def processUrl():
     autostart = request.form.get('autoStart') == 'true'  # Convert 'true' to True, 'false' to False
     if url != None and format != None:
         # Save task to the database
-        task = models.storage.queueAlbum(url, format, thumbnail, autostart)
+        # task = models.storage.queueAlbum(url, format, thumbnail, autostart)
+        task_data = {'url':url, 'format':format, 'thumbnail':thumbnail, 'autostart':autostart}
+        redis_manager = current_app.extensions['redis_manager']
+        redis = redis_manager.get_redis()
+        redis.lpush('albums_task_queue', json.dumps(task_data))
     else:
         abort(400, 'Invalid URL')
     return 'Task submitted successfully'
