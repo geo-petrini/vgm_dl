@@ -55,7 +55,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-3 add-url-component">
+                    <!-- <div class="col-md-3 add-url-component">
                         <div class="input-group">
                             <span class="input-group-text">Thumbnail</span>
                             <select name="thumbnail" class="form-select">
@@ -72,8 +72,8 @@
                                 <option value="false">No</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="col-md-3 add-url-component">
+                    </div> -->
+                    <div class="col add-url-component">
                         <!-- <div class="btn-group"> -->
                         <div class="d-grid gap-2">
                             <button type="submit" class="btn btn-primary add-url">
@@ -90,7 +90,13 @@
                 </div>
             </div>
         </form><!---->
-        <div class="">Downloading</div>
+        <div class="">Albums</div>
+        <div class="container">
+            <div id="albums-container"></div>
+        </div>
+
+<!-- commented this part as it was used only for reference and not yet implemented -->
+        <!-- <div class="">Downloading</div>
         <table class="table">
             <thead>
                 <tr>
@@ -173,7 +179,7 @@
                 </tr>
 
             </tbody>
-        </table>
+        </table> -->
     </div>
     <script type="text/javascript" src="{{ url_for('static', filename='/js/index.js')}}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='/js/theme.js')}}"></script>

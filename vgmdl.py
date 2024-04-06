@@ -127,6 +127,15 @@ class VGMPageParser():
             #title = ' '.join(title.split())
         return title
 
+    def get_album_image(self):
+        img = None
+        pattern = r'<div class="albumImage">\s*<a [\w\./:\-<>\s="]*?>\s*<img src="(?P<imgsrc>[\w\./:\-]+)">'
+        page = get_page(self.url)
+        for m in re.finditer(pattern, page, re.MULTILINE | re.DOTALL):
+            img = m['imgsrc']
+
+        return img
+
     def get_tracks(self, albun_url):
         tracks = []
         pattern = '<td class=\"playlistDownloadSong\"><a href=\"(?P<track>\/game-soundtracks\/album\/[0-9a-zA-Z\.%-]+\/[0-9a-zA-Z\.%-]+)\">'

@@ -1,7 +1,7 @@
 import logging
 from flask import Blueprint, current_app, g, url_for, redirect, render_template, request, send_from_directory, abort
 # from models.storage import queueAlbum
-# import models.storage
+from models.storage import *
 import json
 
 
@@ -21,8 +21,10 @@ def processUrl():
     logging.getLogger('vgmdl').debug(f'request: {request.form}')
     url = request.form.get('url')
     format = request.form.get('format')
-    thumbnail = request.form.get('thumbnail') == 'true'  # Convert 'true' to True, 'false' to False
-    autostart = request.form.get('autoStart') == 'true'  # Convert 'true' to True, 'false' to False
+    thumbnail = None
+    autostart = True
+    # thumbnail = request.form.get('thumbnail') == 'true'  # Convert 'true' to True, 'false' to False
+    # autostart = request.form.get('autoStart') == 'true'  # Convert 'true' to True, 'false' to False
     if url != None and format != None:
         # Save task to the database
         # task = models.storage.queueAlbum(url, format, thumbnail, autostart)
@@ -33,6 +35,33 @@ def processUrl():
     else:
         abort(400, 'Invalid URL')
     return 'Task submitted successfully'
+
+
+@bp.route('/albums', methods=['GET'])
+def get_albums():
+    records = Album.query.all()
+    out = []
+    for record in records:
+        out.append( record.to_json() )
+    return out
+
+@bp.route('/album/<id>', methods=['GET'])
+def get_album(id):
+    album = Album.query.filter_by(id=uuid.UUID(id)).first()
+    tracks = Track.query.filter(Track.album_id == album.id).all()
+    out = album.to_json()
+    out['tracks'] = []
+    for track in tracks:
+        out['tracks'].append( track.to_json() )
+    return out
+
+@bp.route('/tracks', methods=['GET'])
+def get_tracks():
+    records = Track.query.all()
+    out = []
+    for record in records:
+        out.append( record.to_json() )
+    return out
 
 @bp.route('/status', methods=['GET'])
 def get_status():
