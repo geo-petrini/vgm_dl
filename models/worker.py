@@ -14,11 +14,11 @@ import os
 import re
 import base64
 
-rd = redis.Redis(host='rpi', port=6379, db=0)
-
-
+# rd = redis.Redis(host='rpi', port=6379, db=0)
 def worker(app):
     with app.app_context():
+        redis_manager = current_app.extensions['redis_manager']
+        rd = redis_manager.get_redis()
         while True:
             # Dequeue album task data from Redis list
             json_album_task_data = rd.rpop('albums_task_queue')
@@ -84,6 +84,8 @@ def add_tracks_tasks(album, track_urls):
                     f'saved track {track.id} for album {album.id}')
 
                 task_data = {'url': track_url, 'track': track.id.hex}
+                redis_manager = current_app.extensions['redis_manager']
+                rd = redis_manager.get_redis()                
                 rd.lpush('tracks_task_queue', json.dumps(task_data))
 
                 logging.getLogger('vgmdl').debug(f'saved task {task_data}')
