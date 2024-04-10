@@ -21,7 +21,7 @@ def create_app():
     # socketio = SocketIO(app)
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI', 'sqlite:///storage.sqlite')
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "dfsohjig894590uwfjl290")
-    app.config['REDIS_URL'] = os.environ.get('REDIS_URL', "redis://rpi:6379/0")
+    app.config['REDIS_URL'] = os.environ.get('REDIS_URL', "redis://localhost:6379/0")
     app.config['DOWNLOAD_FOLDER'] = os.environ.get('DOWNLOAD_FOLDER', "downloads") 
     app.config['DOWNLOAD_CHUNK_SIZE'] = os.environ.get('DOWNLOAD_CHUNK_SIZE', 1024*10)
 

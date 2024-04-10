@@ -24,7 +24,7 @@ used by run.py and gui.py
 
 # * app.py *
 flask ui
-uses icons from iconify.desing
+uses "Material Design Icons" from iconify.desing 
 https://icon-sets.iconify.design/
 
 # TODO

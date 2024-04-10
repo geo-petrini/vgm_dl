@@ -19,9 +19,40 @@
         </div>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
+                <li class="nav-item me-1">
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-secondary disabled text-nowrap">Browse musics</button>
+                            <a class="btn btn-secondary" role="button" href="https://downloads.khinsider.com/" target="_blank">
+                                <!-- mdi:theme -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M14 3v2h3.59l-9.83 9.83l1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2z"/></svg>                            
+                            </a>
+                        </div>
+                    </div>
+                </li>
+
                 <li class="nav-item dropdown dropstart">
-                    <a class="nav-link" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <!-- mdi:theme -->
+                    <div class="btn-toolbar" role="toolbar">
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-secondary disabled text-nowrap">Theme</button>
+                            <button type="button" class="btn btn-secondary dropdown-toggle dropdown-toggle-split" id="dropdownThemeMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <!-- mdi:theme -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M11 13.5v8H3v-8zM12 2l5.5 9h-11zm5.5 11c2.5 0 4.5 2 4.5 4.5S20 22 17.5 22S13 20 13 17.5s2-4.5 4.5-4.5" />
+                                </svg>
+                            </a>
+                            <ul class="dropdown-menu theme-menu" aria-labelledby="dropdownThemeMenuButton">
+                                <li><a class="dropdown-item theme-item" href="#" data-theme="bootstrap">Bootstrap</a></li>
+                                <li><a class="dropdown-item theme-item" href="#" data-theme="quartz">Quartz</a></li>
+                                <li><a class="dropdown-item theme-item" href="#" data-theme="morph">Morph</a></li>
+                                <li><a class="dropdown-item theme-item" href="#" data-theme="slate">Slate</a></li>
+                            </ul>                               
+                        </div>
+                    </div>
+                 
+                </li>
+
+                <!-- <li class="nav-item dropdown dropstart">
                         <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                             <path fill="currentColor" d="M11 13.5v8H3v-8zM12 2l5.5 9h-11zm5.5 11c2.5 0 4.5 2 4.5 4.5S20 22 17.5 22S13 20 13 17.5s2-4.5 4.5-4.5" />
                         </svg>
@@ -32,7 +63,7 @@
                         <li><a class="dropdown-item" href="#" data-theme="morph">Morph</a></li>
                         <li><a class="dropdown-item" href="#" data-theme="slate">Slate</a></li>
                     </ul>
-                </li>
+                </li> -->
             </ul>
         </div>
     </nav>
@@ -42,7 +73,9 @@
         <form id="playlistForm" novalidate="" class="">
             <div class="container add-url-box">
                 <div class="row">
-                    <div class="col add-url-component input-group"><input type="text" autocomplete="off" spellcheck="false" placeholder="Playlist URL" name="url" class="form-control"></div>
+                    <div class="col add-url-component input-group">
+                        <input type="text" autocomplete="off" spellcheck="false" placeholder="Playlist URL" name="url" class="form-control">
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-md-3 add-url-component">
@@ -142,8 +175,8 @@
             <tbody>
                 <tr>
                     <td>
-                        <div class="form-check"><input type="checkbox" class="form-check-inputd" id="done-https://www.youtube.com/watch?v=yBlZt-LU2XI-select">
-                            <label class="form-check-label" for="done-https://www.youtube.com/watch?v=yBlZt-LU2XI-select"></label>
+                        <div class="form-check"><input type="checkbox" class="form-check-inputd" id="done-ID">
+                            <label class="form-check-label" for="done-ID"></label>
                         </div>
                     </td>
                     <td>
@@ -153,8 +186,8 @@
                             </svg>
                         </div>
                         <span>
-                            <a target="_blank" href="audio_download/Halo%20Theme%20x%20Vode%20An%20(Republic%20Commando)%20%EF%BD%9C%20EPIC%20VERSION%20(Star%20Wars%20x%20Halo%20Mashup).mp3">
-                                Halo Theme x Vode An (Republic Commando) | EPIC VERSION (Star Wars x Halo Mashup)
+                            <a target="_blank" href="TRACK URL">
+                                TRACKNAME
                             </a>
                         </span>
                     </td>
@@ -162,7 +195,7 @@
                     <td></td>
                     <td>
                         <a download="" class="btn btn-secondary"
-                            href="audio_download/Halo%20Theme%20x%20Vode%20An%20(Republic%20Commando)%20%EF%BD%9C%20EPIC%20VERSION%20(Star%20Wars%20x%20Halo%20Mashup).mp3">
+                            href="TRACK URL">
                             <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
                                 <path fill="currentColor" d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7z" />
                             </svg>

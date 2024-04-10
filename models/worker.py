@@ -60,6 +60,7 @@ def read_album(task):
     add_tracks_tasks(album, track_urls)
 
 def read_album_image(img_url):
+    base64_image = None
     try:
         img_data = download(img_url)
         base64_image = base64.b64encode(img_data).decode('utf-8')
