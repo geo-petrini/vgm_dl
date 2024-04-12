@@ -1,6 +1,5 @@
 FROM ubuntu:jammy
 RUN echo "Acquire::http::proxy \"$HTTP_PROXY\";\nAcquire::https::proxy \"$HTTPS_PROXY\";" > /etc/apt/apt.conf.d/proxy.conf
-RUN cat /etc/apt/apt.conf.d/proxy.conf
 RUN apt update
 RUN apt install lsb-release curl gpg -y
 RUN curl -fsSL https://packages.redis.io/gpg | gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
