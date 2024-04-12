@@ -17,13 +17,14 @@ class RedisManager:
         app.extensions['redis_manager'] = self
 
     def redis_url_parser(self):
-        pattern = r'redis://(?P<host>\w+):(?P<port>\d+)/(?P<db>.*)'
+        pattern = r'redis://(?P<credentials>.*@)?(?P<host>[\w\.]+):(?P<port>\d+)/(?P<db>.*)'
         m = re.search(pattern, self.app.config['REDIS_URL'])
         out = {'host':None, 'port':None, 'db':None}
         if m:
             self.host = m.group('host')
             self.port = m.group('port')
             self.db = m.group('db')
+            self.credentials = m.group('credentials').strip('@') if m.group('credentials') else None
         
 
     def get_redis(self):
