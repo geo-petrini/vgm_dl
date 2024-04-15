@@ -31,3 +31,7 @@ services:
 volumes:
   vgmdl_download_b:
     driver: local
+    # driver_opts:
+    #   type: cifs
+    #   device: //NAS/Download
+    #   o: username=vgmdl,password=${ENVPASSWORD},file_mode=0777,dir_mode=0777    
