@@ -1,0 +1,33 @@
+services:
+  vgmdlfe:
+    image: vgmdl_noredis:latest
+    ports:
+      - "5000:5000"
+    volumes:
+    - vgmdl_download_b:/app/downloads
+    # - vgmdl_db:/app/instance
+    environment:
+      - REDIS_URL=redis://vgmdlredis:6379/0
+    depends_on:
+      vgmdlredis:
+        condition: service_healthy    
+    develop:
+        watch:
+          - action: sync
+            path: ./models
+            target: /app/models
+          - action: rebuild
+            path: requirements.txt
+
+  vgmdlredis:
+    # image: redis:latest
+    image: redis:alpine
+    healthcheck:
+        test: [ "CMD", "redis-cli", "--raw", "incr", "ping" ]
+        interval: 30s
+        timeout: 10s
+        retries: 5
+
+volumes:
+  vgmdl_download_b:
+    driver: local
