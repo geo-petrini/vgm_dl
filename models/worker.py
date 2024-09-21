@@ -14,7 +14,6 @@ import os
 import re
 import base64
 
-# rd = redis.Redis(host='rpi', port=6379, db=0)
 def worker(app):
     with app.app_context():
         redis_manager = current_app.extensions['redis_manager']
@@ -236,8 +235,10 @@ def update_albums():
         logging.getLogger('vgmdl').debug(f"album {album.id} status {album.status}")
         tracks = Track.query.filter(Track.album_id == album.id).all()
         tracks_count = len(tracks)
-        logging.getLogger('vgmdl').debug(f"checking {album.id} tracks download status {tracks_count}")
         tracks_downloaded = 0
+        progress_percentage = 0
+        logging.getLogger('vgmdl').debug(f"checking {album.id} tracks download status {tracks_count}")
+
         for track in tracks:
             if track.status == 'downloaded':
                 tracks_downloaded += 1
@@ -246,7 +247,7 @@ def update_albums():
             progress_percentage = (tracks_downloaded / tracks_count) * 100
             album.status = f'downloaded {math.floor(progress_percentage)}%'
             db.session.commit()
-        
+
         if tracks_downloaded == tracks_count:
             logging.getLogger('vgmdl').info(f"album {album.id} download completed {tracks_count}/{tracks_downloaded} ({progress_percentage}%)")
             album.status = 'downloaded'

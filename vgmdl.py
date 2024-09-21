@@ -52,7 +52,7 @@ class VGMDl():
                 folder = folder.replace(ic, ' ')
         
         #compress multipe spaces into one
-        folder = re.sub('\s+',' ', folder)
+        folder = re.sub(r'\s+',' ', folder)
         return folder
     
     def get_links(self):
@@ -123,7 +123,7 @@ class VGMPageParser():
                     title = title.replace(ic, ' ')
             
             #compress multipe spaces into one
-            title = re.sub('\s+',' ', title)
+            title = re.sub(r'\s+',' ', title)
             #title = ' '.join(title.split())
         return title
 
@@ -138,7 +138,7 @@ class VGMPageParser():
 
     def get_tracks(self, albun_url):
         tracks = []
-        pattern = '<td class=\"playlistDownloadSong\"><a href=\"(?P<track>\/game-soundtracks\/album\/[0-9a-zA-Z\.%-]+\/[0-9a-zA-Z\.%-]+)\">'
+        pattern = r'<td class=\"playlistDownloadSong\"><a href=\"(?P<track>\/game-soundtracks\/album\/[0-9a-zA-Z\.%-]+\/[0-9a-zA-Z\.%-]+)\">'
         page = get_page(albun_url)
         for m in re.finditer(pattern, page):
             tracks.append( m['track'].split('/')[-1])
@@ -146,7 +146,7 @@ class VGMPageParser():
 
     def get_track_files(self, url):
         files = []
-        pattern = 'href=\"(?P<file>https://[a-zA-Z0-9\./%-]+).+songDownloadLink'
+        pattern = r'href=\"(?P<file>https://[a-zA-Z0-9\./%-]+).+songDownloadLink'
         page = get_page(url)   
         for m in re.finditer(pattern, page):
             files.append( m['file'])
