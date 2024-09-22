@@ -138,7 +138,7 @@ class VGMPageParser():
 
     def get_tracks(self, albun_url):
         tracks = []
-        pattern = r'<td class=\"playlistDownloadSong\"><a href=\"(?P<track>\/game-soundtracks\/album\/[0-9a-zA-Z\.%-]+\/[0-9a-zA-Z\.%-]+)\">'
+        pattern = r'<td class=\"playlistDownloadSong\"><a href=\"(?P<track>\/game-soundtracks\/album\/[0-9a-zA-Z\.%-]+\/[0-9a-zA-Z\.%-_]+)\">'
         page = get_page(albun_url)
         for m in re.finditer(pattern, page):
             tracks.append( m['track'].split('/')[-1])
@@ -146,7 +146,7 @@ class VGMPageParser():
 
     def get_track_files(self, url):
         files = []
-        pattern = r'href=\"(?P<file>https://[a-zA-Z0-9\./%-]+).+songDownloadLink'
+        pattern = r'href=\"(?P<file>https://[a-zA-Z0-9\./%-_]+).+songDownloadLink'
         page = get_page(url)   
         for m in re.finditer(pattern, page):
             files.append( m['file'])

@@ -28,10 +28,18 @@ def processUrl():
     if url != None and format != None:
         # Save task to the database
         # task = models.storage.queueAlbum(url, format, thumbnail, autostart)
-        task_data = {'url':url, 'format':format, 'thumbnail':thumbnail, 'autostart':autostart}
-        redis_manager = current_app.extensions['redis_manager']
-        redis = redis_manager.get_redis()
-        redis.lpush('albums_task_queue', json.dumps(task_data))
+        # task_data = {'url':url, 'format':format, 'thumbnail':thumbnail, 'autostart':autostart}
+        # redis_manager = current_app.extensions['redis_manager']
+        # redis = redis_manager.get_redis()
+        # redis.lpush('albums_task_queue', json.dumps(task_data))
+        # ch = current_app.cache
+        # cache.set('albums_task_queue', json.dumps(task_data))
+        album = Album(
+            url=url,
+            format=format,
+        )
+        db.session.add(album)
+        db.session.commit()        
     else:
         abort(400, 'Invalid URL')
     return 'Task submitted successfully'
@@ -62,6 +70,32 @@ def get_album_tracks(id):
     for track in tracks:
         out.append( track.to_json() )
     return out
+
+@bp.route('/album/<id>', methods=['DELETE'])
+def delete_album(id):
+    out = ''
+    album = None
+    tracks = None
+    try:
+        album = Album.query.filter_by(id=uuid.UUID(id)).first()
+    except Exception as e:
+        return e, 404
+    
+    try:
+        tracks = Track.query.filter(Track.album_id == album.id).all()
+    except Exception as e:
+        return e, 500
+
+    if tracks:        
+        for track in tracks:
+            db.session.delete(track)
+            db.session.commit()
+
+    if album:
+        db.session.delete(album)
+        db.session.commit()
+    out = 'ok'
+    return out, 200
 
 @bp.route('/status', methods=['GET'])
 def get_status():

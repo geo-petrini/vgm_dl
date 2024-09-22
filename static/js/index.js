@@ -82,12 +82,19 @@ function createAlbumContent(album) {
                         <h5 class="card-title">${album.title}</h5>
                         <p class="card-text">${album.status}</p>
                         <div class="btn-group" role="group">
-                        <button type="button" class="btn btn-primary disabled text-nowrap">Download album</button>
-                        <a class="btn btn-primary disabled" role="button" href="download/${album.id}" target="_blank">
-                            <!-- mdi:theme -->
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M13 5v6h1.17L12 13.17L9.83 11H11V5zm2-2H9v6H5l7 7l7-7h-4zm4 15H5v2h14z"/></svg>
-                        </a>
-                    </div>   
+                            <button type="button" class="btn btn-primary disabled text-nowrap">Download album</button>
+                            <a class="btn btn-primary disabled" role="button" href="download/${album.id}" target="_blank">
+                                <!-- mdi:theme -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M13 5v6h1.17L12 13.17L9.83 11H11V5zm2-2H9v6H5l7 7l7-7h-4zm4 15H5v2h14z"/></svg>
+                            </a>
+                        </div>   
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-danger disabled text-nowrap">Delete</button>
+                            <button class="btn btn-danger" role="button" onClick="deleteAlbum('${album.id}');">
+                                <!-- mdi:theme -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.412-.587T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.587 1.413T17 21zM17 6H7v13h10zM9 17h2V8H9zm4 0h2V8h-2zM7 6v13z"/></svg>
+                            </button>
+                        </div>                        
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-secondary disabled text-nowrap">Album URL</button>
                             <a class="btn btn-secondary" role="button" href="${album.url}" target="_blank">
@@ -224,6 +231,21 @@ function fetchTracks() {
             console.error(xhr.responseText);
         }
     });
+}
+
+function deleteAlbum(id) {
+    console.log('sending delete request for album '+id)
+    $.ajax({
+        url: '/album/' + id,
+        type: 'DELETE',
+        success: function(result) {
+            let album_container ='#' +id + '_content'
+            $(album_container).remove();
+        },
+        error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+        }
+    });    
 }
 
 

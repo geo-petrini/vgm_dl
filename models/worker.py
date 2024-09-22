@@ -4,7 +4,7 @@ from sqlalchemy import or_
 from flask import current_app
 from models.storage import *
 from vgmdl import VGMPageParser
-import redis
+# import redis
 from urllib.parse import unquote
 import math
 import urllib
@@ -16,26 +16,48 @@ import base64
 
 def worker(app):
     with app.app_context():
-        redis_manager = current_app.extensions['redis_manager']
-        rd = redis_manager.get_redis()
         while True:
+            album = get_new_album() #from storage
+            if album: read_album(album)
+
+            track = get_new_track() #from storage
+            if track: download_track(track)
+
+            #old code
             # Dequeue album task data from Redis list
-            json_album_task_data = rd.rpop('albums_task_queue')
-            if json_album_task_data:
-                album_task_data = json.loads(json_album_task_data)
-                read_album(album_task_data)
+            # json_album_task_data = rd.rpop('albums_task_queue')
+            # json_album_task_data = qm.pop('albums_task_queue')
+            # if json_album_task_data:
+            #     album_task_data = json.loads(json_album_task_data)
+            #     read_album(album_task_data)
+
+
 
             # Dequeue track task data from Redis list
-            json_track_task_data = rd.rpop('tracks_task_queue')
-            if json_track_task_data:
-                track_task_data = json.loads(json_track_task_data)
-                download_track(track_task_data)
+            # json_track_task_data = rd.rpop('tracks_task_queue')
+            # json_track_task_data = qm.pop('tracks_task_queue')
+            # if json_track_task_data:
+            #     track_task_data = json.loads(json_track_task_data)
+            #     download_track(track_task_data)
 
             # update all album states
             update_albums()
             sleep(1)
 
-def read_album(task):
+def read_album(album):
+    parser = VGMPageParser(album.url)
+
+    img = parser.get_album_image()
+    logging.getLogger('vgmdl').warning(f'album img url "{img}"')
+    album_image = read_album_image( img )
+    album.title = parser.get_albun_title()
+    album.thumbnail = album_image
+    db.session.commit()
+
+    track_urls = parser.get_links()
+    add_tracks_tasks(album, track_urls)
+
+def DEPRECATED_read_album(task):
     if task['url'] == None or task['url'] == '':
         logging.getLogger('vgmdl').warning(f'invalid url "{task["url"]}" skipping task')
 
@@ -56,7 +78,7 @@ def read_album(task):
     db.session.commit()
 
     track_urls = parser.get_links()
-    add_tracks_tasks(album, track_urls)
+    add_tracks_tasks(album, track_urls)    
 
 def read_album_image(img_url):
     base64_image = None
@@ -83,12 +105,13 @@ def add_tracks_tasks(album, track_urls):
                 logging.getLogger('vgmdl').debug(
                     f'saved track {track.id} for album {album.id}')
 
-                task_data = {'url': track_url, 'track': track.id.hex}
-                redis_manager = current_app.extensions['redis_manager']
-                rd = redis_manager.get_redis()                
-                rd.lpush('tracks_task_queue', json.dumps(task_data))
+                # task_data = {'url': track_url, 'track': track.id.hex}
+                # redis_manager = current_app.extensions['redis_manager']
+                # rd = redis_manager.get_redis()        
+                # rd.lpush('tracks_task_queue', json.dumps(task_data))
+                # qm.set('tracks_task_queue', json.dumps(task_data))
 
-                logging.getLogger('vgmdl').debug(f'saved task {task_data}')
+                # logging.getLogger('vgmdl').debug(f'saved task {task_data}')
             except Exception as e:
                 logging.getLogger('vgmdl').exception(
                     f'error processing album track {track_url}')
@@ -162,16 +185,23 @@ def _prepare_download_path(track, album):
 
     return file_path
 
-def download_track(track_task):
-    try:
-        track = Track.query.filter_by(
-            id=uuid.UUID(track_task['track'])).first()
-        album = Album.query.get(track.album_id)
-    except Exception as e:
-        logging.getLogger('vgmdl').exception(
-            f'error loading correct track and album for task {track_task}')
-        return None
+# def download_track(track_task):
+#     try:
+#         track = Track.query.filter_by(id=uuid.UUID(track_task['track'])).first()
+#         album = Album.query.get(track.album_id)
+#     except Exception as e:
+#         logging.getLogger('vgmdl').exception(
+#             f'error loading correct track and album for task {track_task}')
+#         return None
 
+def download_track(track):
+    try:
+        album = Album.query.get(track.album_id)
+        if album.status == DOWNLOAD_QUEUED:
+            album.status = DOWNLOAD_STARTED
+    except Exception as e:
+        logging.getLogger('vgmdl').exception(f'error loading correct album for track {track}')
+        return None
     file_path = _prepare_download_path(track, album)
 
     if file_path:
@@ -184,9 +214,8 @@ def download_track(track_task):
             file_size = int(response.headers['Content-Length'])
             downloaded_bytes = 0
 
-            logging.getLogger('vgmdl').info(
-                f'downloading track {track.id} as {file_path}')
-            track.status = 'download started'
+            logging.getLogger('vgmdl').info(f'downloading track {track.id} as {file_path}')
+            track.status = DOWNLOAD_STARTED
             track.filesize = file_size
             db.session.commit()
 
@@ -204,7 +233,7 @@ def download_track(track_task):
                         # Calculate download progress as a percentage
                         progress_percentage = (downloaded_bytes / file_size) * 100
                         if math.floor(progress_percentage) % 1 == 0:
-                            track.status = f'downloaded {math.floor(progress_percentage)}%'
+                            track.download_percentage = {math.floor(progress_percentage)}
                             db.session.commit()
                             # logging.getLogger('vgmdl').debug(f"file {filename} downloaded {downloaded_bytes}/{file_size} ({progress_percentage}%)")
                         
@@ -212,15 +241,15 @@ def download_track(track_task):
                             logging.getLogger('vgmdl').info(f"file {filename} download completed {downloaded_bytes}/{file_size} ({progress_percentage}%)")
                             break
 
-            track.status = 'downloaded'
+            track.status = DOWNLOAD_COMPLETED
             track.filename = file_path
             db.session.commit()
             pass
         except Exception as e:
-            logging.getLogger('vgmdl').exception(
-                f'error downloading track {track_task}')
-            track.status = 'error'
+            logging.getLogger('vgmdl').exception(f'error downloading track {track}')
+            track.status = DOWNLOAD_ERROR
             db.session.commit()
+            # TODO cleanup partial downloads
 
 def download(url):
     raw_data = None
@@ -230,7 +259,8 @@ def download(url):
     return raw_data
 
 def update_albums():
-    albums = Album.query.filter(or_(Album.status != 'downloaded', Album.status == None, Album.status == 'NULL')).all()
+    # albums = Album.query.filter(or_(Album.status != DOWNLOAD_COMPLETED, Album.status == None, Album.status == 'NULL')).all()
+    albums = Album.query.filter(or_(Album.status == DOWNLOAD_STARTED)).all()
     for album in albums:
         logging.getLogger('vgmdl').debug(f"album {album.id} status {album.status}")
         tracks = Track.query.filter(Track.album_id == album.id).all()
@@ -240,16 +270,16 @@ def update_albums():
         logging.getLogger('vgmdl').debug(f"checking {album.id} tracks download status {tracks_count}")
 
         for track in tracks:
-            if track.status == 'downloaded':
+            if track.status == DOWNLOAD_COMPLETED:
                 tracks_downloaded += 1
         
         if tracks_count > 0:
             progress_percentage = (tracks_downloaded / tracks_count) * 100
-            album.status = f'downloaded {math.floor(progress_percentage)}%'
+            album.download_percentage = {math.floor(progress_percentage)}
             db.session.commit()
 
-        if tracks_downloaded == tracks_count:
-            logging.getLogger('vgmdl').info(f"album {album.id} download completed {tracks_count}/{tracks_downloaded} ({progress_percentage}%)")
-            album.status = 'downloaded'
-            db.session.commit()
+            if tracks_downloaded == tracks_count:
+                logging.getLogger('vgmdl').info(f"album {album.id} download completed {tracks_count}/{tracks_downloaded} ({progress_percentage}%)")
+                album.status = DOWNLOAD_COMPLETED
+                db.session.commit()
         

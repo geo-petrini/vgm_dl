@@ -8,6 +8,10 @@ import logging
 
 db = SQLAlchemy()
 
+DOWNLOAD_QUEUED = 'download queued'
+DOWNLOAD_STARTED = 'download started'
+DOWNLOAD_COMPLETED = 'download completed'
+DOWNLOAD_ERROR = 'download error'
 
 class Album(db.Model):
     id = db.Column(UUIDType(), primary_key=True, default=uuid.uuid4)
@@ -15,7 +19,8 @@ class Album(db.Model):
     title = db.Column(db.String(255))
     format = db.Column(db.String(255))
     thumbnail = db.Column(db.String(90000))
-    status = db.Column(db.String(255)) 
+    status = db.Column(db.String(255), default=DOWNLOAD_QUEUED) 
+    download_percentage = db.Integer()
 
     def to_json(self):
         d = {
@@ -27,6 +32,9 @@ class Album(db.Model):
             'thumbnail' : self.thumbnail
         }
         return json.dumps(d)
+    
+    def __repr__(self):
+        return f'Album(title="{self.title}", url="{self.url}, status={self.status})'
 
 
 class Track(db.Model):
@@ -36,7 +44,8 @@ class Track(db.Model):
     album_id = db.Column(UUIDType(), ForeignKey('album.id'))
     filename = db.Column(db.String(255))
     filesize = db.Column(db.Integer())
-    status = db.Column(db.String(255)) 
+    status = db.Column(db.String(255), default=DOWNLOAD_QUEUED)
+    download_percentage = db.Integer()
     
     def to_json(self):
         d = {
@@ -49,3 +58,13 @@ class Track(db.Model):
             'status' : self.status
         }
         return json.dumps(d)    
+    
+    def __repr__(self):
+        return f'Track(title="{self.title}", url="{self.url}, status={self.status})'    
+    
+def get_new_album():
+    return Album.query.filter_by(status=DOWNLOAD_QUEUED).first()
+
+def get_new_track():
+    return Track.query.filter_by(status=DOWNLOAD_QUEUED).first()
+
