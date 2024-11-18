@@ -23,6 +23,10 @@ def worker(app):
             track = get_new_track() #from storage
             if track: download_track(track)
 
+            # update all album states
+            update_albums()
+            sleep(1)
+
             #old code
             # Dequeue album task data from Redis list
             # json_album_task_data = rd.rpop('albums_task_queue')
@@ -40,9 +44,6 @@ def worker(app):
             #     track_task_data = json.loads(json_track_task_data)
             #     download_track(track_task_data)
 
-            # update all album states
-            update_albums()
-            sleep(1)
 
 def read_album(album):
     parser = VGMPageParser(album.url)
@@ -95,7 +96,7 @@ def add_tracks_tasks(album, track_urls):
             try:
                 # TODO check if the given track_url is not already present in the db and queued for download (ignore if error or downloaded)
                 track = Track(
-                    id=uuid.uuid4(),
+                    # id=uuid.uuid4().hex,
                     url=track_url,
                     title=unquote(track_url.split('/')[-1]),
                     album_id=album.id,
@@ -236,7 +237,10 @@ def download_track(track):
                         progress_percentage = (downloaded_bytes / file_size) * 100
                         if math.floor(progress_percentage) % 1 == 0:
                             track.download_percentage = {math.floor(progress_percentage)}
-                            db.session.commit()
+                            try:
+                                db.session.commit()
+                            except Exception as e:
+                                logging.getLogger('vgmdl').exception(f'error saving record for track {track}')
                             # logging.getLogger('vgmdl').debug(f"file {filename} downloaded {downloaded_bytes}/{file_size} ({progress_percentage}%)")
                         
                         if downloaded_bytes == file_size:                           

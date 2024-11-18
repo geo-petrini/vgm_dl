@@ -6,11 +6,11 @@ flask ui for vgmdl
 
 from flask import Flask
 from flask import render_template
-# from flask_migrate import Migrate
+from flask_migrate import Migrate
 from dotenv import load_dotenv
 
 import models.logmanager as logmanager
-from models.storage import db
+from models.storage import db,tables_exist
 # from models.redismanager import RedisManager
 
 import os
@@ -33,7 +33,7 @@ def create_app():
     # redis_manager = RedisManager(app)
     
     db.init_app(app)
-    # migrate = Migrate(app, db)
+    migrate = Migrate(app, db)
 
     from routes.default import bp as bp_routes
     app.register_blueprint(bp_routes)    
@@ -42,10 +42,12 @@ def create_app():
     app.register_blueprint(bp_worker)      
 
     from models.worker_manager import start_worker
-    start_worker(app)
-
     with app.app_context():
-        db.create_all() #warning, this function creates tables but does not update them
+        if tables_exist():
+            start_worker(app)
+
+    # with app.app_context():
+    #     db.create_all() #warning, this function creates tables but does not update them
 
     return app
 

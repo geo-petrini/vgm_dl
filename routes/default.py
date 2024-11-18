@@ -57,7 +57,7 @@ def get_albums():
 
 @bp.route('/album/<album_id>', methods=['GET'])
 def get_album(album_id):
-    album = Album.query.filter_by(id=uuid.UUID(album_id)).first()
+    album = Album.query.filter_by(id=album_id).first()
     tracks = Track.query.filter(Track.album_id == album.id).all()
     out = album.to_json()   # FIX this does not work as out becomes a string
     out['tracks'] = []
@@ -67,7 +67,7 @@ def get_album(album_id):
 
 @bp.route('/album/<album_id>/tracks', methods=['GET'])
 def get_album_tracks(album_id):
-    tracks = Track.query.filter(Track.album_id == uuid.UUID(album_id)).all()
+    tracks = Track.query.filter(Track.album_id == album_id).all()
     out = []
     for track in tracks:
         out.append( track.to_json() )
@@ -76,7 +76,7 @@ def get_album_tracks(album_id):
 
 @bp.route('/album/<album_id>/track/<track_id>', methods=['GET'])
 def get_album_track(album_id, track_id):
-    tracks = Track.query.filter(Track.album_id == uuid.UUID(album_id) & (Track.id == uuid.UUID(track_id))).all()
+    tracks = Track.query.filter( (Track.album_id == album_id) & (Track.id == track_id)).all()
     out = []
     for track in tracks:
         out.append( track.to_json() )
@@ -84,26 +84,29 @@ def get_album_track(album_id, track_id):
 
 @bp.route('/track/<track_id>', methods=['GET'])
 def get_track(track_id):
-    tracks = Track.query.filter(Track.id == uuid.UUID(track_id)).all()
+    tracks = Track.query.filter(Track.id == track_id).all()
     out = []
     for track in tracks:
         out.append( track.to_json() )
     return out
 
-@bp.route('/album/<id>', methods=['DELETE'])
-def delete_album(id):
+@bp.route('/album/<album_id>', methods=['DELETE'])
+def delete_album(album_id):
     out = ''
     album = None
     tracks = None
     try:
-        album = Album.query.filter_by(id=uuid.UUID(id)).first()
+        album = Album.query.filter_by(id=album_id).first()
     except Exception as e:
+        logging.getLogger('vgmdl').exception(f'error listing album {album_id}')
         return e, 404
     
-    try:
-        tracks = Track.query.filter(Track.album_id == album.id).all()
-    except Exception as e:
-        return e, 500
+    if album:
+        try:
+            tracks = Track.query.filter(Track.album_id == album.id).all()
+        except Exception as e:
+            logging.getLogger('vgmdl').exception(f'error listing tracks from album {album_id}')
+            return e, 500
 
     if tracks:        
         for track in tracks:
