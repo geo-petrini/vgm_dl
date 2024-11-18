@@ -127,9 +127,9 @@ class VGMPageParser():
             #title = ' '.join(title.split())
         return title
 
-    def get_album_image(self):
+    def get_album_image_url(self):
         img_url = None
-        pattern = r'<div class="albumImage">\s*<a .*>\s*<img src="(?P<imgsrc>[\w\./:\-%]+)">'
+        pattern = r'<div class="albumImage">\s*<a .*>\s*<img src="(?P<imgsrc>[\w\./:\-%]+)">\s*</a>'
         page = get_page(self.url)
         for m in re.finditer(pattern, page, re.MULTILINE | re.DOTALL):
             img_url = m['imgsrc']

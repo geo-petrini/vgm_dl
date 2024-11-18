@@ -11,7 +11,7 @@ from sqlalchemy.sql import or_
 
 db = SQLAlchemy()
 
-DOWNLOAD_PAUSED = 'download paused'
+# DOWNLOAD_PAUSED = 'download paused'
 DOWNLOAD_QUEUED = 'download queued'
 DOWNLOAD_STARTED = 'download started'
 DOWNLOAD_COMPLETED = 'download completed'
@@ -72,7 +72,8 @@ class Track(db.Model):
     
 def get_new_album():
     # return Album.query.filter_by(status=DOWNLOAD_QUEUED).first()
-    stmt = db.select(Album).filter( or_(Album.status==DOWNLOAD_QUEUED, Album.status==DOWNLOAD_PAUSED) )
+    # stmt = db.select(Album).filter( or_(Album.status==DOWNLOAD_QUEUED, Album.status==DOWNLOAD_PAUSED) )
+    stmt = db.select(Album).filter( or_(Album.status==DOWNLOAD_QUEUED) )
     result = db.session.execute(stmt).scalars().first()
     logging.getLogger('vgmdl').debug(f'result: {result}')
     return result

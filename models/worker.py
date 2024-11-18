@@ -47,9 +47,9 @@ def worker(app):
 def read_album(album):
     parser = VGMPageParser(album.url)
 
-    img = parser.get_album_image()
-    logging.getLogger('vgmdl').warning(f'album img url "{img}"')
-    album_image = read_album_image( img )
+    img_url = parser.get_album_image_url()
+    logging.getLogger('vgmdl').debug(f'album img url "{img_url}"')
+    album_image = read_album_image( img_url )
     album.title = parser.get_albun_title()
     album.thumbnail = album_image
     db.session.commit()
@@ -63,7 +63,7 @@ def DEPRECATED_read_album(task):
 
     parser = VGMPageParser(task['url'])
 
-    img = parser.get_album_image()
+    img = parser.get_album_image_url()
     logging.getLogger('vgmdl').warning(f'album img url "{img}"')
     album_image = read_album_image( img )
 
@@ -93,6 +93,7 @@ def add_tracks_tasks(album, track_urls):
     for track_url in track_urls:
         if track_url.endswith(album.format) or album.format == 'all':
             try:
+                # TODO check if the given track_url is not already present in the db and queued for download (ignore if error or downloaded)
                 track = Track(
                     id=uuid.uuid4(),
                     url=track_url,

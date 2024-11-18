@@ -22,8 +22,8 @@ def processUrl():
     url = request.form.get('url')
     format = request.form.get('format')
 
-    thumbnail = request.form.get('thumbnail') == 'true'  # Convert 'true' to True, 'false' to False
-    autostart = request.form.get('autoStart') == 'true'  # Convert 'true' to True, 'false' to False
+    # thumbnail = request.form.get('thumbnail') == 'true'  # Convert 'true' to True, 'false' to False
+    # autostart = request.form.get('autoStart') == 'true'  # Convert 'true' to True, 'false' to False
     if url != None and format != None:
         # Save task to the database
         # task = models.storage.queueAlbum(url, format, thumbnail, autostart)
@@ -36,7 +36,7 @@ def processUrl():
         album = Album(
             url=url,
             format=format,
-            status=DOWNLOAD_QUEUED if autostart == True else DOWNLOAD_PAUSED
+            status=DOWNLOAD_QUEUED
         )
         db.session.add(album)
         db.session.commit()        
