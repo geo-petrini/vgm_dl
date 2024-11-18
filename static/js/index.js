@@ -81,6 +81,7 @@ function createAlbumContent(album) {
                     <div class="card-body">
                         <h5 class="card-title">${album.title}</h5>
                         <p class="card-text">${album.status}</p>
+                        <p class="card-text">${album.download_percentage}</p>
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-primary disabled text-nowrap">Download album</button>
                             <a class="btn btn-primary disabled" role="button" href="download/${album.id}" target="_blank">

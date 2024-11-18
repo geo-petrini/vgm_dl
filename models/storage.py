@@ -25,8 +25,8 @@ class Album(db.Model):
     thumbnail = db.Column(db.String(90000))
     status = db.Column(db.String(255), default=DOWNLOAD_QUEUED) 
     download_percentage = db.Column( db.Integer() )
-    ts_add = db.Column( db.Integer(), default=datetime.datetime.now().timestamp() )
-    ts_finish = db.Column( db.Integer() )
+    ts_add = db.Column( db.Float(), default=datetime.datetime.now().timestamp() )
+    ts_finish = db.Column( db.Float() )
 
     def to_json(self):
         d = {
@@ -53,8 +53,8 @@ class Track(db.Model):
     filesize = db.Column(db.Integer())
     status = db.Column(db.String(255), default=DOWNLOAD_QUEUED)
     download_percentage = db.Column( db.Integer() )
-    ts_add = db.Column( db.Integer(), default=datetime.datetime.now().timestamp() )
-    ts_finish = db.Column( db.Integer() )
+    ts_add = db.Column( db.Float(), default=datetime.datetime.now().timestamp() )
+    ts_finish = db.Column( db.Float() )
     
     def to_json(self):
         d = {
