@@ -2,7 +2,7 @@ services:
   vgmdlfe:
     image: vgmdl_noredis:latest
     ports:
-      - "5000:5000"
+      - "5001:5000"
     volumes:
     - vgmdl_download_b:/app/downloads
     # - vgmdl_db:/app/instance
