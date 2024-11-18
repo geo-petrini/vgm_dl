@@ -103,6 +103,8 @@ function createAlbumContent(album) {
                                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M14 3v2h3.59l-9.83 9.83l1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2z"/></svg>                            
                             </a>
                         </div>
+                        <div id="${album.id}_tracks">
+                        </div>
                     </div>
                 </div>
             </div>
@@ -113,38 +115,38 @@ function createAlbumContent(album) {
     return html
 }
 
-function createTracksList(album){
-    var html = $(`<div>
-    <ul id="${album.id}_tracks" class="list-group">
-    </ul>   
-    </div>
-    `).html()
-    return html 
-}
+// function createTracksList(album){
+//     var html = $(`<div>
+//     <ul id="${album.id}_tracks" class="list-group">
+//     </ul>   
+//     </div>
+//     `).html()
+//     return html 
+// }
 
-function createTrackListItem(track){
-    html = $(`
-    <li id="5f4f9440773948afa159e557bcc3233d" class="list-group-item">
-        01 Crystal Pier 
-        <span class="badge text-bg-success">mp3</span>
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-primary disabled text-nowrap">Download</button>
-            <a class="btn btn-primary" role="button" href="downloads\\\\Dorfromantik Soundtrack Vol. 2\\\\flac\\\\01 Crystal Pier.flac" target="_blank">
-                <!-- mdi:theme -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M13 5v6h1.17L12 13.17L9.83 11H11V5zm2-2H9v6H5l7 7l7-7h-4zm4 15H5v2h14z"/></svg>
-            </a>
-        </div>                                
-        <div class="btn-group" role="group">
-            <button type="button" class="btn btn-secondary disabled text-nowrap">Track URL</button>
-            <a class="btn btn-secondary" role="button" href="https://epsilon.vgmsite.com/soundtracks/dorfromantik-soundtrack-vol.-2-2022/yyduovwddt/01%20Crystal%20Pier.flac" target="_blank">
-                <!-- mdi:theme -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M14 3v2h3.59l-9.83 9.83l1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2z"/></svg>                            
-            </a>
-        </div>                                
-    </li>
-    `)
-    return html
-}
+// function createTrackListItem(track){
+//     html = $(`
+//     <li id="5f4f9440773948afa159e557bcc3233d" class="list-group-item">
+//         01 Crystal Pier 
+//         <span class="badge text-bg-success">mp3</span>
+//         <div class="btn-group" role="group">
+//             <button type="button" class="btn btn-primary disabled text-nowrap">Download</button>
+//             <a class="btn btn-primary" role="button" href="downloads\\\\Dorfromantik Soundtrack Vol. 2\\\\flac\\\\01 Crystal Pier.flac" target="_blank">
+//                 <!-- mdi:theme -->
+//                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M13 5v6h1.17L12 13.17L9.83 11H11V5zm2-2H9v6H5l7 7l7-7h-4zm4 15H5v2h14z"/></svg>
+//             </a>
+//         </div>                                
+//         <div class="btn-group" role="group">
+//             <button type="button" class="btn btn-secondary disabled text-nowrap">Track URL</button>
+//             <a class="btn btn-secondary" role="button" href="https://epsilon.vgmsite.com/soundtracks/dorfromantik-soundtrack-vol.-2-2022/yyduovwddt/01%20Crystal%20Pier.flac" target="_blank">
+//                 <!-- mdi:theme -->
+//                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><path fill="currentColor" d="M14 3v2h3.59l-9.83 9.83l1.41 1.41L19 6.41V10h2V3m-2 16H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2z"/></svg>                            
+//             </a>
+//         </div>                                
+//     </li>
+//     `)
+//     return html
+// }
 
 function createTracksTable(album){
     t = `<table class="table">
