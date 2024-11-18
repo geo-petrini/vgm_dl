@@ -3,6 +3,7 @@ flask
 flask-sqlalchemy
 sqlalchemy-utils
 redis
+python-dotenv
 # pyopenssl
 #Flask-Migrate
 # flask-redis

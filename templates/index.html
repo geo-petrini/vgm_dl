@@ -16,7 +16,7 @@
         <div class="container-fluid">
             <a href="#" class="navbar-brand">VGMDL</a>
         </div>
-        <div class="collapse navbar-collapse" id="navbarNav">
+        <div class="collapse-fluid navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item me-1">
                     <div class="btn-toolbar" role="toolbar">
@@ -53,8 +53,8 @@
         </div>
     </nav>
 
-    <div role="main" class="container container-xl">
-        <div class="">Input</div>
+    <div role="main" class="container-xl">
+        <h2 class="">Input</h2>
         <form id="playlistForm" novalidate="" class="">
             <div class="container add-url-box">
                 <div class="row">
@@ -81,7 +81,7 @@
                                 <option value="false">No</option>
                             </select>
                         </div>
-                    </div>
+                    </div> -->
                     <div class="col-md-3 add-url-component">
                         <div class="input-group">
                             <span class="input-group-text">Auto Start</span>
@@ -90,7 +90,7 @@
                                 <option value="false">No</option>
                             </select>
                         </div>
-                    </div> -->
+                    </div>
                     <div class="col add-url-component">
                         <!-- <div class="btn-group"> -->
                         <div class="d-grid gap-2">
@@ -108,96 +108,14 @@
                 </div>
             </div>
         </form><!---->
-        <div class="">Albums</div>
+        <h2 class="">Queue</h2>
+        <div class="container">
+            <div id="queue-container"></div>
+        </div>        
+        <h2 class="">Albums</h2>
         <div class="container">
             <div id="albums-container"></div>
         </div>
-
-<!-- commented this part as it was used only for reference and not yet implemented -->
-        <!-- <div class="">Downloading</div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col" style="width: 1rem;">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="queue-select-all">
-                            <label class="form-check-label" for="queue-select-all"></label>
-                        </div>
-                    </th>
-                    <th scope="col"><button type="button" disabled="" class="btn btn-link text-decoration-none px-0 me-4">Cancel selected</button></th>
-                    <th scope="col" style="width: 14rem;"></th>
-                    <th scope="col" style="width: 8rem;">Speed</th>
-                    <th scope="col" style="width: 7rem;">ETA</th>
-                    <th scope="col" style="width: 2rem;"></th>
-                    <th scope="col" style="width: 2rem;"></th>
-                    <th scope="col" style="width: 2rem;"></th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <div class="">Completed</div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col" style="width: 1rem;">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="done-select-all">
-                            <label class="form-check-label" for="done-select-all"></label>
-                        </div>
-                    </th>
-                    <th scope="col">
-                        <button type="button" disabled="" class="btn btn-link text-decoration-none">Clear selected</button>
-                        <button type="button" class="btn btn-link text-decoration-none">Clear completed</button>
-                        <button type="button" disabled="" class="btn btn-link text-decoration-none">Clear failed</button>
-                        <button type="button" disabled="" class="btn btn-link text-decoration-none">Retry failed</button>
-                    </th>
-                    <th scope="col">File Size</th>
-                    <th scope="col" style="width: 2rem;"></th>
-                    <th scope="col" style="width: 2rem;"></th>
-                    <th scope="col" style="width: 2rem;"></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <div class="form-check"><input type="checkbox" class="form-check-inputd" id="done-ID">
-                            <label class="form-check-label" for="done-ID"></label>
-                        </div>
-                    </td>
-                    <td>
-                        <div style="display: inline-block; width: 1.5rem;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z" />
-                            </svg>
-                        </div>
-                        <span>
-                            <a target="_blank" href="TRACK URL">
-                                TRACKNAME
-                            </a>
-                        </span>
-                    </td>
-                    <td>7.83 MB</td>
-                    <td></td>
-                    <td>
-                        <a download="" class="btn btn-secondary"
-                            href="TRACK URL">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7z" />
-                            </svg>
-                        </a>
-                    </td>
-
-                    <td>
-                        <button type="button" class="btn btn-danger">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                                <path fill="currentColor" d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z" />
-                            </svg>
-                        </button>
-                    </td>
-                </tr>
-
-            </tbody>
-        </table> -->
     </div>
     <script type="text/javascript" src="{{ url_for('static', filename='/js/index.js')}}"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='/js/theme.js')}}"></script>

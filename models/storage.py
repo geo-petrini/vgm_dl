@@ -8,6 +8,7 @@ import logging
 
 db = SQLAlchemy()
 
+DOWNLOAD_PAUSED = 'download paused'
 DOWNLOAD_QUEUED = 'download queued'
 DOWNLOAD_STARTED = 'download started'
 DOWNLOAD_COMPLETED = 'download completed'

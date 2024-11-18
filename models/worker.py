@@ -262,24 +262,31 @@ def update_albums():
     # albums = Album.query.filter(or_(Album.status != DOWNLOAD_COMPLETED, Album.status == None, Album.status == 'NULL')).all()
     albums = Album.query.filter(or_(Album.status == DOWNLOAD_STARTED)).all()
     for album in albums:
-        logging.getLogger('vgmdl').debug(f"album {album.id} status {album.status}")
+        logging.getLogger('vgmdl').debug(f"album {album.id} status '{album.status}'")
         tracks = Track.query.filter(Track.album_id == album.id).all()
         tracks_count = len(tracks)
         tracks_downloaded = 0
+        tracks_errors = 0
+        tracks_processed = tracks_downloaded + tracks_errors
         progress_percentage = 0
-        logging.getLogger('vgmdl').debug(f"checking {album.id} tracks download status {tracks_count}")
+        logging.getLogger('vgmdl').debug(f"album {album.id}, checking download status for {tracks_count} tracks")
 
         for track in tracks:
             if track.status == DOWNLOAD_COMPLETED:
                 tracks_downloaded += 1
+
+            if track.status == DOWNLOAD_ERROR:
+                tracks_errors += 1   
+
+        tracks_processed = tracks_downloaded + tracks_errors        
         
         if tracks_count > 0:
-            progress_percentage = (tracks_downloaded / tracks_count) * 100
+            progress_percentage = (tracks_processed / tracks_count) * 100
             album.download_percentage = {math.floor(progress_percentage)}
             db.session.commit()
 
-            if tracks_downloaded == tracks_count:
-                logging.getLogger('vgmdl').info(f"album {album.id} download completed {tracks_count}/{tracks_downloaded} ({progress_percentage}%)")
+            if tracks_processed == tracks_count:
+                logging.getLogger('vgmdl').info(f"album {album.id} download completed: {tracks_count}/{tracks_downloaded} errors: {tracks_errors} ({progress_percentage}%)")
                 album.status = DOWNLOAD_COMPLETED
                 db.session.commit()
         
