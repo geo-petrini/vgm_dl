@@ -55,9 +55,9 @@ def get_albums():
         out.append( record.to_json() )
     return out
 
-@bp.route('/album/<id>', methods=['GET'])
-def get_album(id):
-    album = Album.query.filter_by(id=uuid.UUID(id)).first()
+@bp.route('/album/<album_id>', methods=['GET'])
+def get_album(album_id):
+    album = Album.query.filter_by(id=uuid.UUID(album_id)).first()
     tracks = Track.query.filter(Track.album_id == album.id).all()
     out = album.to_json()   # FIX this does not work as out becomes a string
     out['tracks'] = []
@@ -65,9 +65,26 @@ def get_album(id):
         out['tracks'].append( track.to_json() )
     return out
 
-@bp.route('/album/<id>/tracks', methods=['GET'])
-def get_album_tracks(id):
-    tracks = Track.query.filter(Track.album_id == uuid.UUID(id)).all()
+@bp.route('/album/<album_id>/tracks', methods=['GET'])
+def get_album_tracks(album_id):
+    tracks = Track.query.filter(Track.album_id == uuid.UUID(album_id)).all()
+    out = []
+    for track in tracks:
+        out.append( track.to_json() )
+    return out
+
+
+@bp.route('/album/<album_id>/track/<track_id>', methods=['GET'])
+def get_album_track(album_id, track_id):
+    tracks = Track.query.filter(Track.album_id == uuid.UUID(album_id) & (Track.id == uuid.UUID(track_id))).all()
+    out = []
+    for track in tracks:
+        out.append( track.to_json() )
+    return out
+
+@bp.route('/track/<track_id>', methods=['GET'])
+def get_track(track_id):
+    tracks = Track.query.filter(Track.id == uuid.UUID(track_id)).all()
     out = []
     for track in tracks:
         out.append( track.to_json() )
