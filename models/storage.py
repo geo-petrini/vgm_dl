@@ -35,7 +35,8 @@ class Album(db.Model):
             'title' : self.title,
             'format' : self.format,
             'status' : self.status,
-            'thumbnail' : self.thumbnail
+            'thumbnail' : self.thumbnail,
+            'download_percentage' : self.download_percentage
         }
         return json.dumps(d)
     
@@ -63,7 +64,8 @@ class Track(db.Model):
             'album_id' : self.album_id.hex,
             'filename' : self.filename,
             'filesize' : self.filesize,
-            'status' : self.status
+            'status' : self.status,
+            'download_percentage' : self.download_percentage,
         }
         return json.dumps(d)    
     
