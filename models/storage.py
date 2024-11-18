@@ -24,7 +24,7 @@ class Album(db.Model):
     format = db.Column(db.String(255))
     thumbnail = db.Column(db.String(90000))
     status = db.Column(db.String(255), default=DOWNLOAD_QUEUED) 
-    download_percentage = db.Integer()
+    download_percentage = db.Column( db.Integer() )
     ts_add = db.Column( db.Integer(), default=datetime.datetime.now().timestamp() )
     ts_finish = db.Column( db.Integer() )
 
@@ -51,7 +51,7 @@ class Track(db.Model):
     filename = db.Column(db.String(255))
     filesize = db.Column(db.Integer())
     status = db.Column(db.String(255), default=DOWNLOAD_QUEUED)
-    download_percentage = db.Integer()
+    download_percentage = db.Column( db.Integer() )
     ts_add = db.Column( db.Integer(), default=datetime.datetime.now().timestamp() )
     ts_finish = db.Column( db.Integer() )
     
@@ -75,7 +75,7 @@ def get_new_album():
     # stmt = db.select(Album).filter( or_(Album.status==DOWNLOAD_QUEUED, Album.status==DOWNLOAD_PAUSED) )
     stmt = db.select(Album).filter( or_(Album.status==DOWNLOAD_QUEUED) )
     result = db.session.execute(stmt).scalars().first()
-    logging.getLogger('vgmdl').debug(f'result: {result}')
+    # logging.getLogger('vgmdl').debug(f'result: {result}')
     return result
 
 def get_new_track():

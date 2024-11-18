@@ -61,7 +61,7 @@ function createAlbumDiv(album) {
 }
 
 function createAlbumContent(album) {
-    // TODO add button to remove album from history
+    // DONE add button to remove album from history
     // TODO add button to remove album completely (db and files)
     // TODO add tracks
     // TODO add download button
@@ -160,7 +160,7 @@ function createTracksTable(album){
         </tbody>
     </table>`
     $.ajax({
-        url: `/album/${album.id}/tracks`,  // Your Flask route for fetching albums
+        url: `/album/${album.id}/tracks`,
         type: 'GET',
         success: function (data) {
 
