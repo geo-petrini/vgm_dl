@@ -45,7 +45,7 @@ def create_app():
     start_worker(app)
 
     with app.app_context():
-        db.create_all()
+        db.create_all() #warning, this function creates tables but does not update them
 
     return app
 

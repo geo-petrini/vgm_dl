@@ -47,7 +47,9 @@ def processUrl():
 
 @bp.route('/albums', methods=['GET'])
 def get_albums():
-    records = Album.query.all()
+    stmt = db.select(Album).order_by(Album.id.desc())
+    records = db.session.execute(stmt).scalars().all()
+    # records = Album.query.all()
     out = []
     for record in records:
         out.append( record.to_json() )

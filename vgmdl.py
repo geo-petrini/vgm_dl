@@ -128,13 +128,13 @@ class VGMPageParser():
         return title
 
     def get_album_image(self):
-        img = None
-        pattern = r'<div class="albumImage">\s*<a [\w\./:\-<>\s="]*?>\s*<img src="(?P<imgsrc>[\w\./:\-]+)">'
+        img_url = None
+        pattern = r'<div class="albumImage">\s*<a .*>\s*<img src="(?P<imgsrc>[\w\./:\-%]+)">'
         page = get_page(self.url)
         for m in re.finditer(pattern, page, re.MULTILINE | re.DOTALL):
-            img = m['imgsrc']
+            img_url = m['imgsrc']
 
-        return img
+        return img_url
 
     def get_tracks(self, albun_url):
         tracks = []

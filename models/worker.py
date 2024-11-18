@@ -97,7 +97,8 @@ def add_tracks_tasks(album, track_urls):
                     id=uuid.uuid4(),
                     url=track_url,
                     title=unquote(track_url.split('/')[-1]),
-                    album_id=album.id
+                    album_id=album.id,
+                    status=album.status
                 )
                 db.session.add(track)
                 db.session.commit()

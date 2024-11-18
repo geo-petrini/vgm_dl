@@ -1,10 +1,13 @@
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy_utils import UUIDType
-from sqlalchemy import ForeignKey
 from urllib.parse import unquote
 import uuid
 import json
 import logging
+import datetime
+from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_utils import UUIDType
+from sqlalchemy import ForeignKey
+from sqlalchemy.sql import or_
+
 
 db = SQLAlchemy()
 
@@ -22,6 +25,8 @@ class Album(db.Model):
     thumbnail = db.Column(db.String(90000))
     status = db.Column(db.String(255), default=DOWNLOAD_QUEUED) 
     download_percentage = db.Integer()
+    ts_add = db.Column( db.Integer(), default=datetime.datetime.now().timestamp() )
+    ts_finish = db.Column( db.Integer() )
 
     def to_json(self):
         d = {
@@ -47,6 +52,8 @@ class Track(db.Model):
     filesize = db.Column(db.Integer())
     status = db.Column(db.String(255), default=DOWNLOAD_QUEUED)
     download_percentage = db.Integer()
+    ts_add = db.Column( db.Integer(), default=datetime.datetime.now().timestamp() )
+    ts_finish = db.Column( db.Integer() )
     
     def to_json(self):
         d = {
@@ -64,7 +71,11 @@ class Track(db.Model):
         return f'Track(title="{self.title}", url="{self.url}, status={self.status})'    
     
 def get_new_album():
-    return Album.query.filter_by(status=DOWNLOAD_QUEUED).first()
+    # return Album.query.filter_by(status=DOWNLOAD_QUEUED).first()
+    stmt = db.select(Album).filter( or_(Album.status==DOWNLOAD_QUEUED, Album.status==DOWNLOAD_PAUSED) )
+    result = db.session.execute(stmt).scalars().first()
+    logging.getLogger('vgmdl').debug(f'result: {result}')
+    return result
 
 def get_new_track():
     return Track.query.filter_by(status=DOWNLOAD_QUEUED).first()
