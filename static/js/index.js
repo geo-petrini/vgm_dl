@@ -3,14 +3,9 @@ var albumMap = {};
 
 function fetchAlbums() {
     $.ajax({
-        url: '/albums',  // Your Flask route for fetching albums
+        url: '/albums',  // Flask route for fetching albums
         type: 'GET',
         success: function (data) {
-            // Handle the response here
-            // console.log(data);
-            // Parse JSON response
-            // var albums = JSON.parse(data);
-            // Invoke callback function with parsed album data
             createAlbumDivs(data);
         },
         error: function (xhr, status, error) {
@@ -148,28 +143,16 @@ function createAlbumContent(album) {
 //     return html
 // }
 
-function createTracksTable(album){
-    t = `<table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Title</th>
-                <th scope="col">Actions</th>
-                <th scope="col">Size</th>
-                <th scope="col">Status</th>
-            </tr>
-        </thead>
-        <tbody class="table-group-divider">
-
-        </tbody>
-    </table>`
+function fetchTracks(album){
     $.ajax({
         url: `/album/${album.id}/tracks`,
         type: 'GET',
         success: function (data) {
-
+            t = createTracksTable()
+            rows = ''
             data.forEach(function (track) {
                 track = JSON.parse(track);
-        
+                rows += createTrackTableRow(track)
                 if (album.id in albumMap) {
                     // update album if necessary
                     updateAlbum(album)
@@ -180,7 +163,9 @@ function createTracksTable(album){
                     albumMap[album.id] = album_div;
                     $('#albums-container').append(album_div);
                 }
-                // Append div to container
+                // Append tracks to container
+                [TRACKS]
+                t.replace("[TRACK_ROWS]", rows)
             });
         },
         error: function (xhr, status, error) {
@@ -188,16 +173,48 @@ function createTracksTable(album){
             console.error(xhr.responseText);
         }
     });
+}
 
+function createTracksTable(){
+    t = `<table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Title</th>
+                <th scope="col">Actions</th>
+                <th scope="col">Size</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody class="table-group-divider">
+            [TRACK_ROWS]
+        </tbody>
+    </table>`
+    return t
 }
 
 function createTrackTableRow(track){
-    let split_track_name = track.name.split('.')
-    let track_ext = split_track_name.pop()
-    let track_name = split_track_name.join('.')
     tr = `
     <tr>
-        <td>${track_name} <span class="badge text-bg-success">${track_ext}</span></td>
+        ${ _renderTrackTitle(track) }
+        ${ _renderTrackActions(track) }
+        <td>${track.filesize}</td>
+        <td>${track.status}</td>
+    </tr>
+    `
+    return tr;
+}
+
+function _renderTrackTitle(track){
+    let split_track_name = track.name.split('.')
+    let track_ext = split_track_name.pop()
+    let track_name = split_track_name.join('.')    
+    title = `<td>${track_name} <span class="badge text-bg-success">${track_ext}</span></td>`
+    return title
+}
+
+function _renderTrackActions(track){
+    // TODO actually use track data
+    actions = `
         <td>
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-primary disabled text-nowrap">Download</button>
@@ -214,11 +231,8 @@ function createTrackTableRow(track){
                 </a>
             </div>               
         </td>
-        <td>${track.filesize}</td>
-        <td>${track.status}</td>
-    </tr>
     `
-    return tr;
+    return actions
 }
 
 function fetchTracks() {
