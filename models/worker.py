@@ -295,4 +295,3 @@ def update_albums():
                 logging.getLogger('vgmdl').info(f"album {album.id} download completed: {tracks_count}/{tracks_downloaded} errors: {tracks_errors} ({progress_percentage}%)")
                 album.status = DOWNLOAD_COMPLETED
                 db.session.commit()
-        
