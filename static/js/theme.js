@@ -7,12 +7,12 @@ $(document).ready(function () {
     // Retrieve the saved theme preference from localStorage
     var savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
-        $("#theme-css").attr('href', '/css/' + savedTheme + '/bootstrap-' + savedTheme + '.min.css');
+        $("#theme-css").attr('href', '/css/vendor/' + savedTheme + '/bootstrap-' + savedTheme + '.min.css');
     }
 
     $(".theme-item").click(function () {
         var theme = $(this).data('theme');
-        $("#theme-css").attr('href', '/css/' + theme + '/bootstrap-' + theme + '.min.css');
+        $("#theme-css").attr('href', '/css/vendor/' + theme + '/bootstrap-' + theme + '.min.css');
         setThemePreference(theme); // Save the selected theme preference
         $(".theme-menu").removeClass("show");
     });

@@ -38,6 +38,9 @@ def create_app():
     from routes.default import bp as bp_routes
     app.register_blueprint(bp_routes)    
 
+    from routes.api import bp as bp_api
+    app.register_blueprint(bp_api)        
+
     from models.worker_manager import bp as bp_worker
     app.register_blueprint(bp_worker)      
 
